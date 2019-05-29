@@ -1,13 +1,23 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"github.com/bwmarrin/discordgo"
 )
 
+var (
+	Token string
+)
+
+func init() {
+	flag.StringVar(&Token, "t", "", "Bot token")
+	flag.Parse()
+}
+
 func main() {
 
-	discord, err := discordgo.New("Bot " + "dummy token")
+	discord, err := discordgo.New("Bot " + Token)
 
 	if err != nil {
 		fmt.Println("Error creating bot,", err)
