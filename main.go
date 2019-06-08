@@ -63,22 +63,49 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 		return
 	}
 
+	fmt.Println("String recieved:", m.Content)
+
 	if m.Content == "russian roulette" {
-		members, err := s.GuildMembers(m.GuildID, "", 90)
+		russianRoulette(s, m)
+	} else if m.Content == "thanos snap" {
+		thanosSnap(s, m)
+	} else {
+		fmt.Println("Unrecognized str")
+	}
+}
 
-		if( err != nil) {
-			return
-		}
+func russianRoulette(s *discordgo.Session, m *discordgo.MessageCreate) {
+	members, err := s.GuildMembers(m.GuildID, "", 90)
 
-		member := members[rand.Intn(len(members) ) ]
+	if( err != nil) {
+		return
+	}
 
-		length := 3 + rand.Intn(32 - 3)
+	member := members[rand.Intn(len(members) ) ]
 
-		name := RandStringRunes(length)
+	length := 3 + rand.Intn(32 - 3)
 
-		fmt.Println(member.User, "will have their name changed to", name)
+	name := RandStringRunes(length)
 
-		err = s.GuildMemberNickname(m.GuildID, member.User.ID, name)
+	fmt.Println(member.User, "will have their name changed to", name)
+
+	err = s.GuildMemberNickname(m.GuildID, member.User.ID, name)
+
+	if( err != nil) {
+		fmt.Println(err)
+	}
+}
+
+func thanosSnap(s *discordgo.Session, m *discordgo.MessageCreate) {
+	members, err := s.GuildMembers(m.GuildID, "", 90)
+
+	if( err != nil) {
+		return
+	}
+
+	for _, member := range members {
+		err = s.GuildMemberNickname(m.GuildID, member.User.ID, "")
+		fmt.Println("Snapping", member.User)
 
 		if( err != nil) {
 			fmt.Println(err)
